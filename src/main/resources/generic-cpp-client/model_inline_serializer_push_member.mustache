@@ -1,0 +1,6 @@
+{{#required}}
+    o->add(_types::u8_literal(u8"{{{baseName}}}"), _serializer::json::to_value(d, _serializer::json::make_value(d), this->{{name}}));
+{{/required}}
+{{^required}}
+    if(this->{{name}}) o->add(_types::u8_literal(u8"{{{baseName}}}"), _serializer::json::to_value(d, _serializer::json::make_value(d), *this->{{name}}));
+{{/required}}

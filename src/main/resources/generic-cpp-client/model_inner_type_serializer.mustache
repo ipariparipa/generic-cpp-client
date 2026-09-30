@@ -1,0 +1,182 @@
+{{#isEnum}}
+#define _ENUM _SCOPE::{{classname}}::{{#isContainer}}{{{enumName}}}{{/isContainer}}{{^isContainer}}{{#vendorExtensions.alternativeName}}{{.}}{{/vendorExtensions.alternativeName}}{{^vendorExtensions.alternativeName}}{{{datatypeWithEnum}}}{{/vendorExtensions.alternativeName}}{{/isContainer}}
+namespace _serializer { namespace json
+{
+
+template<>
+value::ref to_value<_ENUM>(const document::ref & d, const _serializer::json::value::ref &v, const _ENUM & s)
+{
+{{#isNumeric}}
+    return _serializer::json::to_value(d, v, static_cast<{{{baseType}}}>(s));
+{{/isNumeric}}
+{{^isNumeric}}
+    {{#mostInnerItems}}
+        {{#isNumeric}}
+    return _serializer::json::to_value(d, v, static_cast<{{{baseType}}}>(s));
+        {{/isNumeric}}
+        {{^isNumeric}}
+    switch(s)
+    {
+            {{#isString}}
+                {{#allowableValues}}
+                    {{#enumVars}}
+    case _ENUM::{{name}}: return _serializer::json::to_value(d, v, _types::string(_types::u8_literal(u8"{{{value}}}")));
+                    {{/enumVars}}
+                    {{^enumVars}}
+                        {{#vendorExtensions.enumVars}}
+    case _ENUM::{{name}}: return _serializer::json::to_value(d, v, _types::string(_types::u8_literal(u8"{{{value}}}")));
+                        {{/vendorExtensions.enumVars}}
+                    {{/enumVars}}
+                {{/allowableValues}}
+            {{/isString}}
+            {{^isString}}
+                {{#allowableValues}}
+                    {{#enumVars}}
+    case _ENUM::{{name}}: return _serializer::json::to_value(d, v, {{value}});
+                    {{/enumVars}}
+                    {{^enumVars}}
+                        {{#vendorExtensions.enumVars}}
+    case _ENUM::{{name}}: return _serializer::json::to_value(d, v, {{value}});
+                        {{/vendorExtensions.enumVars}}
+                    {{/enumVars}}
+                {{/allowableValues}}
+            {{/isString}}
+    }
+
+    return _types::nullref;
+        {{/isNumeric}}
+    {{/mostInnerItems}}
+    {{^mostInnerItems}}
+    switch(s)
+    {
+        {{#isString}}
+            {{#allowableValues}}
+                {{#enumVars}}
+    case _ENUM::{{name}}: return _serializer::json::to_value(d, v, _types::string(_types::u8_literal(u8"{{{value}}}")));
+                {{/enumVars}}
+                {{^enumVars}}
+                    {{#vendorExtensions.enumVars}}
+    case _ENUM::{{name}}: return _serializer::json::to_value(d, v, _types::string(_types::u8_literal(u8"{{{value}}}")));
+                    {{/vendorExtensions.enumVars}}
+                {{/enumVars}}
+            {{/allowableValues}}
+        {{/isString}}
+        {{^isString}}
+            {{#allowableValues}}
+                {{#enumVars}}
+    case _ENUM::{{name}}: return _serializer::json::to_value(d, v, {{value}});
+                {{/enumVars}}
+                {{^enumVars}}
+                    {{#vendorExtensions.enumVars}}
+    case _ENUM::{{name}}: return _serializer::json::to_value(d, v, {{value}});
+                    {{/vendorExtensions.enumVars}}
+                {{/enumVars}}
+            {{/allowableValues}}
+        {{/isString}}
+    }
+
+    return _types::nullref;
+    {{/mostInnerItems}}
+{{/isNumeric}}
+}
+
+template<>
+bool from_value<_ENUM>(const _serializer::json::value::ref &v, _ENUM & s)
+{
+{{#isNumeric}}
+    if({{{baseType}}} r; _serializer::json::from_value(v, r))
+    {
+        s = static_cast<_ENUM>(r);
+        return true;
+    }
+{{/isNumeric}}
+{{^isNumeric}}
+    {{#mostInnerItems}}
+        {{#isNumeric}}
+    if({{{baseType}}} r; _serializer::json::from_value(v, r))
+    {
+        s = static_cast<_ENUM>(r);
+        return true;
+    }
+        {{/isNumeric}}
+        {{^isNumeric}}
+            {{#isString}}
+    const static _types::unordered_map<_types::string, _ENUM> values {
+                {{#allowableValues}}
+                    {{#enumVars}}
+        { _types::u8_literal(u8"{{{value}}}"), _ENUM::{{name}} },
+                    {{/enumVars}}
+                {{/allowableValues}}
+        };
+            {{/isString}}
+            {{^isString}}
+    const static _types::unordered_map<{{{dataType}}}, _ENUM> values {
+                {{#allowableValues}}
+                    {{#enumVars}}
+        { {{value}}, _ENUM::{{name}} },
+                    {{/enumVars}}
+                {{/allowableValues}}
+    };
+            {{/isString}}
+    if({{{dataType}}} ev; !_serializer::json::from_value(v, ev))
+        if(auto it = values.find(ev); it != values.end())
+        {
+            s = it->second;
+            return true;
+        }
+        {{/isNumeric}}
+    {{/mostInnerItems}}
+    {{^mostInnerItems}}
+        {{#isString}}
+    const static _types::unordered_map<_types::string, _ENUM> values {
+            {{#allowableValues}}
+                {{#enumVars}}
+        { _types::u8_literal(u8"{{{value}}}"), _ENUM::{{name}} },
+                {{/enumVars}}
+                {{^enumVars}}
+                    {{#vendorExtensions.enumVars}}
+        { _types::u8_literal(u8"{{{value}}}"), _ENUM::{{name}} },
+                    {{/vendorExtensions.enumVars}}
+                {{/enumVars}}
+            {{/allowableValues}}
+    };
+        {{/isString}}
+        {{^isString}}
+    const static _types::unordered_map<{{{dataType}}}, _ENUM> values {
+            {{#allowableValues}}
+                {{#enumVars}}
+        { {{value}}, _ENUM::{{name}} },
+                {{/enumVars}}
+                {{^enumVars}}
+                    {{#vendorExtensions.enumVars}}
+        { {{value}}, _ENUM::{{name}} },
+                    {{/vendorExtensions.enumVars}}
+                {{/enumVars}}
+            {{/allowableValues}}
+    };
+        {{/isString}}
+
+    if({{{dataType}}} ev; _serializer::json::from_value(v, ev))
+        if(auto it = values.find(ev); it != values.end())
+        {
+            s = it->second;
+            return true;
+        }
+    {{/mostInnerItems}}
+{{/isNumeric}}
+    return false;
+}
+
+}}
+
+namespace _types
+{
+
+template<>
+_ENUM default_value<_ENUM>()
+{ return _ENUM::{{#allowableValues}}{{#enumVars}}{{#-first}}{{name}}{{/-first}}{{/enumVars}}{{^enumVars}}{{#vendorExtensions.enumVars}}{{#-first}}{{name}}{{/-first}}{{/vendorExtensions.enumVars}}{{/enumVars}}{{/allowableValues}}; }
+
+}
+#undef _ENUM
+
+{{/isEnum}}

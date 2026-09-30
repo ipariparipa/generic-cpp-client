@@ -1,0 +1,16 @@
+{{#isNullable}}
+{{^isEnum}}
+    _types::optional<{{{dataType}}}> {{name}};
+{{/isEnum}}
+{{#isEnum}}
+    _types::optional<{{^isMap}}{{{datatypeWithEnum}}}{{/isMap}}{{#isMap}}{{{dataType}}}{{/isMap}}> {{name}};
+{{/isEnum}}
+{{/isNullable}}
+{{^isNullable}}
+{{^isEnum}}
+    {{#required}}{{{dataType}}}{{/required}}{{^required}}_types::optional<{{{dataType}}}>{{/required}} {{name}}{{^isContainer}}{{#required}} { {{{defaultValue}}} }{{/required}}{{/isContainer}};
+{{/isEnum}}
+{{#isEnum}}
+    {{#required}}{{^isMap}}{{{datatypeWithEnum}}}{{/isMap}}{{#isMap}}{{{dataType}}}{{/isMap}}{{/required}}{{^required}}_types::optional<{{^isMap}}{{{datatypeWithEnum}}}{{/isMap}}{{#isMap}}{{{dataType}}}{{/isMap}}>{{/required}} {{name}}{{#required}} { {{#allowableValues}}{{#enumVars}}{{#-first}}{{{cppNamespace}}}{{#modelNamespaceDeclarations}}::{{this}}{{/modelNamespaceDeclarations}}::{{package}}::{{classname}}::{{#isContainer}}{{{enumName}}}{{/isContainer}}{{^isContainer}}{{{datatypeWithEnum}}}{{/isContainer}}::{{name}}{{/-first}}{{/enumVars}}{{/allowableValues}} }{{/required}};
+{{/isEnum}}
+{{/isNullable}}

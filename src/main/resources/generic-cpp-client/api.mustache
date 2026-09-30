@@ -1,0 +1,61 @@
+// ============================================================
+// GENERATED FILE
+// ============================================================
+
+#pragma once
+
+#include "_types/variant.h"
+#include "_types/string.h"
+#include "_serializer/to_string.h"
+#include "_serializer/content.h"
+{{#imports}}
+{{{import}}}
+{{/imports}}
+
+namespace {{{cppNamespace}}} { namespace {{package}}
+{
+
+template<typename ClientT,
+         typename RequestT = typename ClientT::request_t,
+         template<typename...> typename ResponseRequestT = ClientT::template response_request_t>
+class {{classname}}
+{
+    ClientT m_http_client;
+public:
+    {{classname}}(const ClientT & http_client)
+        : m_http_client(http_client)
+    { }
+
+    virtual ~{{classname}}() = default;
+
+{{#operations}}
+    {{#operation}}
+
+    typename {{#returnType}}ResponseRequestT<_types::variant<
+            {{#responses}}{{#vendorExtensions.responseTypes}}_serializer::response<_serializer::mime_type("{{{mediaType}}}"), {{code}}, {{{dataType}}}>{{^-last}},
+            {{/-last}}{{/vendorExtensions.responseTypes}}{{^-last}},
+            {{/-last}}{{/responses}}
+        >>{{/returnType}}{{^returnType}}RequestT{{/returnType}}::ref {{nickname}}({{#allParams}}{{^isBodyParam}}{{^-first}}, {{/-first}}const {{{dataType}}} & {{paramName}}{{/isBodyParam}}{{/allParams}}{{#allParams}}{{#isBodyParam}}{{^-first}}, {{/-first}}const _types::variant<
+                {{#bodyParam}}{{#vendorExtensions.bodyTypes}}_serializer::content<_serializer::mime_type("{{{mediaType}}}"), {{{dataType}}}>{{^-last}},
+                {{/-last}}{{/vendorExtensions.bodyTypes}}{{^-last}},
+                {{/-last}}{{/bodyParam}}
+            >  & {{paramName}}{{/isBodyParam}}{{/allParams}})
+    {
+        _types::string _path { "{{vendorExtensions.cleanPath}}" };
+        {{#allParams}}
+        {{#isPathParam}}
+        _path += _serializer::to_string({{paramName}});
+        {{/isPathParam}}
+        {{/allParams}}
+        return {{#returnType}}ResponseRequestT<_types::variant<
+            {{#responses}}{{#vendorExtensions.responseTypes}}_serializer::response<_serializer::mime_type("{{{mediaType}}}"), {{code}}, {{{dataType}}}>{{^-last}},
+            {{/-last}}{{/vendorExtensions.responseTypes}}{{^-last}},
+            {{/-last}}{{/responses}}
+        >>{{/returnType}}{{^returnType}}RequestT{{/returnType}}::make(m_http_client, _path, "{{httpMethod}}"{{#allParams}}{{#isBodyParam}}, {{paramName}}{{/isBodyParam}}{{/allParams}});
+    }
+
+    {{/operation}}
+{{/operations}}
+};
+
+}}

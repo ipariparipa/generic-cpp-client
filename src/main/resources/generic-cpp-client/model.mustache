@@ -1,0 +1,547 @@
+// ============================================================
+// GENERATED FILE
+// ============================================================
+#pragma once
+{{#models}}
+{{#model}}
+
+#include "_types/common.h"
+{{^parent}}
+{{{defaultInclude}}}
+    {{^isEnum}}
+#include "_types/reference.h"
+#include "_types/optional.h"
+#include "_types/natives.h"
+    {{/isEnum}}
+    {{#isEnum}}
+        {{#isString}}
+#include "_types/string.h"
+#include "_types/containers.h"
+        {{/isString}}
+        {{#isNumeric}}
+#include "_types/natives.h"
+        {{/isNumeric}}
+    {{/isEnum}}
+{{/parent}}
+{{#hasEnums}}
+#include "_types/string.h"
+#include "_types/containers.h"
+#include "_types/natives.h"
+{{/hasEnums}}
+{{#composedSchemas}}
+    {{#oneOf}}
+#include "_types/natives.h"
+#include "_types/variant.h"
+        {{#isEnum}}
+#include "_types/string.h"
+#include "_types/containers.h"
+        {{/isEnum}}
+        {{#isFreeFormObject}}
+#include "_types/value.h"
+        {{/isFreeFormObject}}
+        {{#isString}}
+#include "_types/string.h"
+        {{/isString}}
+        {{#isArray}}
+#include "_types/containers.h"
+        {{/isArray}}
+        {{#isMap}}
+#include "_types/containers.h"
+        {{/isMap}}
+    {{/oneOf}}
+{{/composedSchemas}}
+{{#composedSchemas}}
+    {{#anyOf}}
+#include "_types/natives.h"
+#include "_types/variant.h"
+        {{#isEnum}}
+#include "_types/string.h"
+#include "_types/containers.h"
+        {{/isEnum}}
+        {{#isFreeFormObject}}
+#include "_types/value.h"
+        {{/isFreeFormObject}}
+        {{#isString}}
+#include "_types/string.h"
+        {{/isString}}
+        {{#isArray}}
+#include "_types/containers.h"
+        {{/isArray}}
+        {{#isMap}}
+#include "_types/containers.h"
+        {{/isMap}}
+    {{/anyOf}}
+{{/composedSchemas}}
+#include "_serializer/json.h"
+{{/model}}
+{{/models}}
+
+//imports
+{{#imports}}
+{{{import}}}
+{{/imports}}
+
+{{#models}}
+{{#model}}
+
+namespace {{{cppNamespace}}} { {{#modelNamespaceDeclarations}}namespae {{this}} { {{/modelNamespaceDeclarations}}namespace {{package}}
+{
+
+{{#isEnum}}
+    {{#isNumeric}}
+enum class {{classname}} : {{{dataType}}}
+{
+    {{#allowableValues}}
+    {{#enumVars}}
+    {{name}} = {{value}},
+    {{/enumVars}}
+    {{/allowableValues}}
+};
+    {{/isNumeric}}
+    {{^isNumeric}}
+enum class {{classname}}
+{
+    {{#allowableValues}}
+    {{#enumVars}}
+    {{name}},
+    {{/enumVars}}
+    {{/allowableValues}}
+};
+    {{/isNumeric}}
+using {{classname}}_ref = {{classname}};
+{{/isEnum}}
+{{^isEnum}}
+struct {{classname}}
+    {{#allOf}}
+  {{#-first}}:{{/-first}}{{^-first}},{{/-first}} {{.}}
+    {{/allOf}}
+{
+    {{#composedSchemas}}
+        {{#allOf}}
+        {{#vars}}
+{{>model_inner_type}}
+        {{/vars}}
+        {{/allOf}}
+        {{#oneOf}}
+{{>model_inner_type}}
+        {{/oneOf}}
+        {{#anyOf}}
+{{>model_inner_type}}
+        {{/anyOf}}
+        {{#oneOf}}
+        {{#-first}}
+    using variant_t = _types::variant<{{#oneOf}}{{^-first}}, {{/-first}}{{#isEnum}}{{#vendorExtensions.alternativeName}}{{.}}{{/vendorExtensions.alternativeName}}{{^vendorExtensions.alternativeName}}{{{datatypeWithEnum}}}{{/vendorExtensions.alternativeName}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}{{/oneOf}}>;
+
+    variant_t data;
+        {{/-first}}
+        {{/oneOf}}
+        {{#anyOf}}
+        {{#-first}}
+    using variant_t = _types::variant<{{#anyOf}}{{^-first}}, {{/-first}}{{#isEnum}}{{#vendorExtensions.alternativeName}}{{.}}{{/vendorExtensions.alternativeName}}{{^vendorExtensions.alternativeName}}{{{datatypeWithEnum}}}{{/vendorExtensions.alternativeName}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}{{/anyOf}}>;
+
+    variant_t data;
+        {{/-first}}
+        {{/anyOf}}
+    {{/composedSchemas}}
+    {{^composedSchemas}}
+    {{#vars}}
+        {{^isInherited}}
+{{>model_inner_type}}
+        {{/isInherited}}
+    {{/vars}}
+    {{/composedSchemas}}
+    {{#composedSchemas}}
+        {{#allOf}}
+        {{#vars}}
+{{>model_member}}
+        {{/vars}}
+        {{/allOf}}
+        {{#isAdditionalPropertiesTrue}}
+    _types::map<_types::string, {{{additionalPropertiesType}}}> additional;
+        {{/isAdditionalPropertiesTrue}}
+    {{/composedSchemas}}
+    {{^composedSchemas}}
+        {{#vars}}
+        {{^isInherited}}
+{{>model_member}}
+        {{/isInherited}}
+        {{/vars}}
+        {{#isAdditionalPropertiesTrue}}
+    _types::map<_types::string, {{{additionalPropertiesType}}}> additional;
+        {{/isAdditionalPropertiesTrue}}
+    {{/composedSchemas}}
+
+    {{#composedSchemas}}
+        {{^oneOf}}
+        {{^anyOf}}
+    virtual _serializer::json::object::ref push_members(const _serializer::json::document::ref & d, const _serializer::json::object::ref & o) const{{#allOf}}{{#-first}} override{{/-first}}{{/allOf}};
+    virtual bool pull_members(const _serializer::json::object::ref & o){{#allOf}}{{#-first}} override{{/-first}}{{/allOf}};
+        {{/anyOf}}
+        {{/oneOf}}
+    {{/composedSchemas}}
+    {{^composedSchemas}}
+        {{#vars}}
+        {{#-first}}
+    virtual _serializer::json::object::ref push_members(const _serializer::json::document::ref & d, const _serializer::json::object::ref & o) const{{#allOf}}{{#-first}} override{{/-first}}{{/allOf}};
+    virtual bool pull_members(const _serializer::json::object::ref & o){{#allOf}}{{#-first}} override{{/-first}}{{/allOf}};
+        {{/-first}}
+        {{/vars}}
+    {{/composedSchemas}}
+
+};
+using {{classname}}_ref = _types::shared_ref<{{classname}}>;
+{{/isEnum}}
+
+} {{#modelNamespaceDeclarations}} } {{/modelNamespaceDeclarations}} }
+
+#define _SCOPE {{{cppNamespace}}}{{#modelNamespaceDeclarations}}::{{this}}{{/modelNamespaceDeclarations}}::{{package}}
+{{#isEnum}}
+#define _ENUM _SCOPE::{{classname}}
+namespace _serializer { namespace json
+{
+
+template<>
+value::ref to_value<_ENUM>(const document::ref & d, const value::ref &v, const _ENUM & s)
+{
+    {{#isNumeric}}
+    return to_value(d, v, static_cast<{{{dataType}}}>(s));
+    {{/isNumeric}}
+    {{^isNumeric}}
+    switch(s)
+    {
+        {{#isString}}
+            {{#allowableValues}}
+            {{#enumVars}}
+    case _ENUM::{{name}}: return to_value(d, v, _types::string(_types::u8_literal(u8"{{{value}}}")));
+            {{/enumVars}}
+            {{/allowableValues}}
+        {{/isString}}
+        {{^isString}}
+            {{#allowableValues}}
+            {{#enumVars}}
+    case _ENUM::{{name}}: return to_value(d, v, {{value}});
+            {{/enumVars}}
+            {{/allowableValues}}
+        {{/isString}}
+    }
+        {{#allOf}}
+    if(auto ret = to_value(d, v, static_cast<_SCOPE::{{{.}}}>(s)))
+        return ret;
+        {{/allOf}}
+    return _types::nullref;
+    {{/isNumeric}}
+}
+
+template<>
+bool from_value<_ENUM>(const value::ref &v, _ENUM & s)
+{
+    {{#isNumeric}}
+    if({{{dataType}}} r; from_value(v, r))
+    {
+        s = static_cast<_ENUM>(r);
+        return true;
+    }
+    {{/isNumeric}}
+    {{^isNumeric}}
+        {{#isString}}
+    const static _types::unordered_map<_types::string, _ENUM> values {
+            {{#allowableValues}}
+            {{#enumVars}}
+        { _types::u8_literal(u8"{{{value}}}"), _ENUM::{{name}} },
+            {{/enumVars}}
+            {{/allowableValues}}
+    };
+        {{/isString}}
+        {{^isString}}
+    const static _types::unordered_map<{{{dataType}}}, _ENUM> values {
+            {{#allowableValues}}
+            {{#enumVars}}
+        { {{value}}, _ENUM::{{name}} },
+            {{/enumVars}}
+            {{/allowableValues}}
+    };
+        {{/isString}}
+
+    if({{{dataType}}} ev; !from_value(v, ev))
+        if(auto it = values.find(ev); it != values.end())
+        {
+            s = it->second;
+            return true;
+        }
+
+        {{#allOf}}
+    if(_SCOPE::{{{.}}} r; from_value(v, r))
+    {
+        t = static_cast<_ENUM>(r);
+        return true;
+    }
+        {{/allOf}}
+
+    {{/isNumeric}}
+    return false;
+}
+
+}}
+
+namespace _types
+{
+
+template<>
+constexpr _ENUM default_value<_ENUM>()
+{ return {{#allowableValues}}{{#enumVars}}{{#-first}}_ENUM::{{name}}{{/-first}}{{/enumVars}}{{/allowableValues}}; }
+
+}
+#undef _ENUM
+{{/isEnum}}
+{{^isEnum}}
+    {{#composedSchemas}}
+        {{#allOf}}
+        {{#vars}}
+{{>model_inner_type_serializer}}
+        {{/vars}}
+        {{/allOf}}
+    {{#oneOf}}
+{{>model_inner_type_serializer}}
+    {{/oneOf}}
+    {{#anyOf}}
+{{>model_inner_type_serializer}}
+    {{/anyOf}}
+    {{/composedSchemas}}
+    {{^composedSchemas}}
+        {{#vars}}
+        {{^isInherited}}
+{{>model_inner_type_serializer}}
+        {{/isInherited}}
+        {{/vars}}
+    {{/composedSchemas}}
+namespace _serializer { namespace json
+{
+
+    {{#composedSchemas}}
+        {{^oneOf}}
+        {{^anyOf}}
+template<>
+value::ref to_value<_SCOPE::{{classname}}_ref>(const document::ref & d, const value::ref & v, const _SCOPE::{{classname}}_ref & s)
+{
+    return s->push_members(d, v->as_object());
+}
+
+template<>
+bool from_value<_SCOPE::{{classname}}_ref>(const value::ref & v, _SCOPE::{{classname}}_ref & t)
+{
+    return t->pull_members(v->as_object());
+}
+        {{/anyOf}}
+        {{/oneOf}}
+        {{#anyOf}}
+        {{#-first}}
+template<>
+value::ref to_value<_SCOPE::{{classname}}_ref>(const document::ref & d, const value::ref & v, const _SCOPE::{{classname}}_ref & s)
+{
+    std::visit([&](auto && arg) {
+        using T = std::decay_t<decltype(arg)>;
+        if constexpr (std::is_same_v<T, std::monostate>)
+            v->set_null();
+        else
+            to_value(d, v, arg);
+    }, s->data);
+
+    return v;
+}
+
+template<>
+bool from_value<_SCOPE::{{classname}}_ref>(const value::ref & v, _SCOPE::{{classname}}_ref & t)
+{
+            {{#anyOf}}
+    {{^-first}}else {{/-first}}if(auto & r = t->data.emplace<{{#isEnum}}_SCOPE::{{classname}}::{{#vendorExtensions.alternativeName}}{{.}}{{/vendorExtensions.alternativeName}}{{^vendorExtensions.alternativeName}}{{{datatypeWithEnum}}}{{/vendorExtensions.alternativeName}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}>(); from_value(v, r))
+        return true;
+            {{/anyOf}}
+    return false;
+}
+        {{/-first}}
+        {{/anyOf}}
+        {{#oneOf}}
+        {{#-first}}
+template<>
+value::ref to_value<_SCOPE::{{classname}}_ref>(const document::ref & d, const value::ref & v, const _SCOPE::{{classname}}_ref & s)
+{
+    std::visit([&](auto && arg) {
+        using T = std::decay_t<decltype(arg)>;
+        if constexpr (std::is_same_v<T, std::monostate>)
+            v->set_null();
+        else
+            to_value(d, v, arg);
+    }, s->data);
+
+    return v;
+}
+
+template<>
+bool from_value<_SCOPE::{{classname}}_ref>(const value::ref & v, _SCOPE::{{classname}}_ref & t)
+{
+    bool ok = false;
+            {{#oneOf}}
+    if(auto & r = t->data.emplace<{{#isEnum}}_SCOPE::{{classname}}::{{#vendorExtensions.alternativeName}}{{.}}{{/vendorExtensions.alternativeName}}{{^vendorExtensions.alternativeName}}{{{datatypeWithEnum}}}{{/vendorExtensions.alternativeName}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}>(); from_value(v, r))
+    {
+        if(ok) return false;
+        ok = true;
+    }
+            {{/oneOf}}
+
+    return ok;
+}
+        {{/-first}}
+        {{/oneOf}}
+    {{/composedSchemas}}
+    {{^composedSchemas}}
+template<>
+value::ref to_value<_SCOPE::{{classname}}_ref>(const document::ref & d, const value::ref & v, const _SCOPE::{{classname}}_ref & s)
+{
+    return s->push_members(d, v->as_object());
+}
+
+template<>
+bool from_value<_SCOPE::{{classname}}_ref>(const value::ref & v, _SCOPE::{{classname}}_ref & t)
+{
+    return t->pull_members(v->as_object());
+}
+    {{/composedSchemas}}
+
+}}
+
+namespace _types
+{
+
+template<>
+_SCOPE::{{classname}}_ref default_value<_SCOPE::{{classname}}_ref>()
+{ return _types::shared_ref<_SCOPE::{{classname}}>(new _SCOPE::{{classname}}); }
+
+}
+{{/isEnum}}
+#undef _SCOPE
+
+{{^isEnum}}
+namespace {{{cppNamespace}}} { {{#modelNamespaceDeclarations}}namespae {{this}} { {{/modelNamespaceDeclarations}}namespace {{package}}
+{
+
+    {{#composedSchemas}}
+        {{^oneOf}}
+        {{^anyOf}}
+inline _serializer::json::object::ref {{classname}}::push_members(const _serializer::json::document::ref & d, const _serializer::json::object::ref & o) const
+{
+            {{#allOf}}
+            {{#vars}}
+{{>model_inline_serializer_push_member}}
+            {{/vars}}
+            {{/allOf}}
+        {{/anyOf}}
+        {{/oneOf}}
+        {{#isAdditionalPropertiesTrue}}
+    for(const auto & i : additional)
+        o->add(i.first, to_value(d, _serializer::json::make_value(d), i.second));
+        {{/isAdditionalPropertiesTrue}}
+    {{/composedSchemas}}
+        {{#allOf}}
+    {{.}}::push_members(d, o);
+        {{/allOf}}
+    {{#composedSchemas}}
+        {{^oneOf}}
+        {{^anyOf}}
+    return o;
+}
+        {{/anyOf}}
+        {{/oneOf}}
+    {{/composedSchemas}}
+    {{^composedSchemas}}
+inline _serializer::json::object::ref {{classname}}::push_members(const _serializer::json::document::ref & d, const _serializer::json::object::ref & o) const
+{
+        {{#vars}}
+        {{^isInherited}}
+{{>model_inline_serializer_push_member}}
+        {{/isInherited}}
+        {{/vars}}
+        {{#isAdditionalPropertiesTrue}}
+    for(const auto & i : additional)
+        o->add(i.first, to_value(d, _serializer::json::make_value(d), i.second));
+        {{/isAdditionalPropertiesTrue}}
+    {{/composedSchemas}}
+    {{^composedSchemas}}
+        {{#allOf}}
+    {{.}}::push_members(d, o);
+        {{/allOf}}
+    return o;
+}
+    {{/composedSchemas}}
+
+    {{#composedSchemas}}
+        {{^oneOf}}
+        {{^anyOf}}
+inline bool {{classname}}::pull_members(const _serializer::json::object::ref & o)
+{
+            {{#allOf}}
+            {{#vars}}
+{{>model_inline_serializer_pull_member}}
+            {{/vars}}
+            {{/allOf}}
+        {{/anyOf}}
+        {{/oneOf}}
+        {{#isAdditionalPropertiesTrue}}
+    {
+        auto all_members = o->get_members();
+            {{#vars}}
+        all_members.erase(_types::u8_literal(u8"{{name}}"));
+            {{/vars}}
+        auto doc = _serializer::json::make_document();
+        for(const auto & i : all_members)
+            if(auto v = _serializer::json::make_value(doc); v->copy_from(i.second))
+                additional.insert({ i.first, v });
+    }
+        {{/isAdditionalPropertiesTrue}}
+    {{/composedSchemas}}
+        {{#allOf}}
+    if(!{{.}}::pull_members(o))
+        return false;
+        {{/allOf}}
+    {{#composedSchemas}}
+        {{^oneOf}}
+        {{^anyOf}}
+    return true;
+}
+        {{/anyOf}}
+        {{/oneOf}}
+    {{/composedSchemas}}
+    {{^composedSchemas}}
+inline bool {{classname}}::pull_members(const _serializer::json::object::ref & o)
+{
+        {{#vars}}
+        {{^isInherited}}
+{{>model_inline_serializer_pull_member}}
+        {{/isInherited}}
+        {{/vars}}
+        {{#isAdditionalPropertiesTrue}}
+    {
+        auto all_members = o->get_members();
+                {{#vars}}
+        all_members.erase(_types::u8_literal(u8"{{name}}"));
+                {{/vars}}
+        auto doc = _serializer::json::make_document();
+        for(const auto & i : all_members)
+            if(auto v = _serializer::json::make_value(doc); v->copy_from(i.second))
+                additional.insert({ i.first, v });
+    }
+        {{/isAdditionalPropertiesTrue}}
+    {{/composedSchemas}}
+    {{^composedSchemas}}
+            {{#allOf}}
+    if(!{{.}}::pull_members(o))
+        return false;
+            {{/allOf}}
+    return true;
+}
+    {{/composedSchemas}}
+
+} {{#modelNamespaceDeclarations}} } {{/modelNamespaceDeclarations}} }
+{{/isEnum}}
+
+{{/model}}
+{{/models}}

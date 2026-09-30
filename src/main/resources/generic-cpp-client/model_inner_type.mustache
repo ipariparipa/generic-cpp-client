@@ -1,0 +1,62 @@
+{{#isEnum}}
+    {{#isNumeric}}
+    enum class {{#isContainer}}{{{enumName}}}{{/isContainer}}{{^isContainer}}{{{datatypeWithEnum}}}{{/isContainer}}
+      {{#isContainer}}{{#mostInnerItems}}: {{{baseType}}}{{/mostInnerItems}}{{/isContainer}}{{^isContainer}}: {{{baseType}}}{{/isContainer}}
+    {
+        {{#allowableValues}}
+            {{#enumVars}}
+        {{name}} = {{value}},
+            {{/enumVars}}
+            {{^enumVars}}
+                {{#values}}
+        _{{.}} = {{.}},
+                {{/values}}
+            {{/enumVars}}
+        {{/allowableValues}}
+    };
+
+{{/isNumeric}}
+    {{^isNumeric}}
+        {{#mostInnerItems}}
+            {{#isNumeric}}
+    enum class {{#isContainer}}{{{enumName}}}{{/isContainer}}{{^isContainer}}{{{datatypeWithEnum}}}{{/isContainer}}
+      {{#isContainer}}{{#mostInnerItems}}: {{{baseType}}}{{/mostInnerItems}}{{/isContainer}}{{^isContainer}}: {{{baseType}}}{{/isContainer}}
+    {
+                {{#allowableValues}}
+                    {{#enumVars}}
+        {{name}} = {{value}},
+                    {{/enumVars}}
+                {{/allowableValues}}
+    };
+
+            {{/isNumeric}}
+            {{^isNumeric}}
+    enum class {{#isContainer}}{{{enumName}}}{{/isContainer}}{{^isContainer}}{{#vendorExtensions.alternativeName}}{{.}}{{/vendorExtensions.alternativeName}}{{^vendorExtensions.alternativeName}}{{{datatypeWithEnum}}}{{/vendorExtensions.alternativeName}}{{/isContainer}}
+    {
+                {{#allowableValues}}
+                    {{#enumVars}}
+        {{name}},
+                    {{/enumVars}}
+                {{/allowableValues}}
+    };
+
+            {{/isNumeric}}
+        {{/mostInnerItems}}
+        {{^mostInnerItems}}
+    enum class {{#isContainer}}{{{enumName}}}{{/isContainer}}{{^isContainer}}{{#vendorExtensions.alternativeName}}{{.}}{{/vendorExtensions.alternativeName}}{{^vendorExtensions.alternativeName}}{{{datatypeWithEnum}}}{{/vendorExtensions.alternativeName}}{{/isContainer}}
+    {
+            {{#allowableValues}}
+                {{#enumVars}}
+        {{name}},
+                {{/enumVars}}
+                {{^enumVars}}
+                {{#vendorExtensions.enumVars}}
+        {{name}},
+                {{/vendorExtensions.enumVars}}
+                {{/enumVars}}
+            {{/allowableValues}}
+    };
+
+        {{/mostInnerItems}}
+    {{/isNumeric}}
+{{/isEnum}}

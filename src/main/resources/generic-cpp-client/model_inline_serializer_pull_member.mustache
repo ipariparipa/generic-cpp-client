@@ -1,0 +1,8 @@
+{{#required}}
+    if(auto v = o->member(_types::u8_literal(u8"{{{baseName}}}")); !v || !_serializer::json::from_value(v, this->{{name}}))
+        return false;
+{{/required}}
+{{^required}}
+    if(auto v = o->member(_types::u8_literal(u8"{{{baseName}}}")); v && !_serializer::json::from_value(v, this->{{name}}))
+        return false;
+{{/required}}
